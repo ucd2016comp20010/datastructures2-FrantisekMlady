@@ -118,11 +118,13 @@ public class SinglyLinkedList<E> implements List<E> {
     }
 
 
+
     @Override
     public void addFirst(E e) {
         if(head==null){
             head = new Node<E>(e, null);
         }
+
 
         head = new Node<>(e, head);
     }
