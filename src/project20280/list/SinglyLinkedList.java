@@ -102,18 +102,21 @@ public class SinglyLinkedList<E> implements List<E> {
     @Override
     public void add(int position, E e) {
         Node<E> node = head;
-        if (head == null || position == 0){
+        if (head == null || position <= 0){
             addFirst(e);
+            return;
         }
 
-        if(position > size()-1){
+        if(position >= size){
             addLast(e);
+            return;
         }
-        for(int i = 1; i < position; i++){
-            node.setNext(node.getNext());
+        for(int i = 0; i < position-1; i++){
+            node = node.getNext();
         }
 
-        node.next = new Node<>(e, node.getNext());
+        node.setNext(new Node<>(e, node.getNext()));
+        size++;
 
     }
 
@@ -121,21 +124,24 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public void addFirst(E e) {
-        if(head==null){
-            head = new Node<E>(e, null);
-        }
-
-
         head = new Node<>(e, head);
+        size++;
     }
 
     @Override
     public void addLast(E e) {
+
+        if (head == null) {
+            addFirst(e);
+            return;
+        }
+
         Node<E> node = head;
         while (node.getNext()!=null){
-            node.setNext(node.getNext());
+            node = node.getNext();
         }
         node.setNext(new Node<>(e,null));
+        size++;
     }
 
     @Override
