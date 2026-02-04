@@ -22,7 +22,6 @@ public class SinglyLinkedList<E> implements List<E> {
          * @param n reference to a node that should follow the new node
          */
         public Node(E e, Node<E> n) {
-            // TODO
             this.element = e;
             this.next = n;
         }
@@ -55,9 +54,7 @@ public class SinglyLinkedList<E> implements List<E> {
          * @param n the node that should follow this one
          */
         public void setNext(Node<E> n) {
-            if(getNext()!=null){
-                this.next = n;
-            }
+            this.next = n;
         }
     } //----------- end of nested Node class -----------
 
@@ -88,12 +85,12 @@ public class SinglyLinkedList<E> implements List<E> {
     @Override
     public E get(int position) {
         Node<E> node = head;
-        if (head == null || size() <= position){
+        if (head == null || size <= position || position < 0){
             return null;
         }
 
         for(int i = 0; i < position; i++){
-            node.setNext(node.getNext());
+            node = node.getNext();
         }
 
         return node.getElement();
@@ -146,19 +143,58 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public E remove(int position) {
-        // TODO
-        return null;
+        if (position <= 0){
+            return removeFirst();
+        }
+        if (position >= size){
+            return removeLast();
+        }
+        Node<E> node = head;
+        for(int i = 0; i < position-1; i++){
+            node = node.getNext();
+        }
+        E removedElement = node.getNext().getElement();
+        node.next = node.getNext().getNext();
+        size--;
+        return removedElement;
+
+
     }
 
     @Override
     public E removeFirst() {
-        // TODO
+        if(head!= null) {
+            E headElement = head.getElement();
+            head = head.getNext();
+            size--;
+            return headElement;
+
+        }
+
         return null;
     }
 
     @Override
     public E removeLast() {
-        // TODO
+        if(head!= null){
+
+            if(head.getNext() == null){
+                E lastElement = head.getElement();
+                head = null;
+                size--;
+                return lastElement;
+            }
+
+            Node<E> node = head;
+            while (node.getNext().getNext()!=null) {
+                node = node.getNext();
+            }
+            E lastElement = node.getNext().getElement();
+            node.setNext(null);
+            size--;
+            return lastElement;
+
+        }
         return null;
     }
 
@@ -212,7 +248,7 @@ public class SinglyLinkedList<E> implements List<E> {
         //System.out.println("I accept your apology");
         //ll.add(3, 2);
         System.out.println(ll);
-        ll.remove(5);
+        ll.remove(0);
         System.out.println(ll);
 
     }
