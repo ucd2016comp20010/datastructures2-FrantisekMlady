@@ -121,7 +121,7 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public void addFirst(E e) {
-        head = new Node<>(e, head);
+        head = new Node<>(e, null);
         size++;
     }
 
