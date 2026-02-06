@@ -6,6 +6,13 @@ import java.util.Iterator;
 
 public class CircularlyLinkedList<E> implements List<E> {
 
+    public E first() {
+        if (tail == null) {
+            return null;
+        }
+        return tail.next.getData();
+    }
+
     private class Node<T> {
         private final T data;
         private Node<T> next;
