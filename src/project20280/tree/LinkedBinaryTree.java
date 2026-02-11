@@ -153,8 +153,14 @@ public class LinkedBinaryTree<E> extends AbstractBinaryTree<E> {
      * @throws IllegalStateException if the tree is not empty
      */
     public Position<E> addRoot(E e) throws IllegalStateException {
-        // TODO
-        return null;
+        if (!isEmpty()) {
+            throw new IllegalStateException("Tree already has a root");
+        }
+
+        Node<E> newNode = new Node<>(e, null, null, null);
+        size++;
+        root = newNode;
+        return root;
     }
 
     public void insert(E e) {
@@ -179,8 +185,21 @@ public class LinkedBinaryTree<E> extends AbstractBinaryTree<E> {
      * @throws IllegalArgumentException if p already has a left child
      */
     public Position<E> addLeft(Position<E> p, E e) throws IllegalArgumentException {
-        // TODO
-        return null;
+        if(p == null){
+            throw new IllegalArgumentException("Position cant be null");
+        }
+        if (!(p instanceof Node)) {
+            throw new IllegalArgumentException("Invalid position type");
+        }
+        Node<E> parent = (Node<E>)p;
+
+        if (parent.left != null) {
+            throw new IllegalArgumentException("Left child already exists");
+        }
+        Node<E> newNode = new Node<>(e, parent, null, null);
+        parent.left = newNode;
+        size++;
+        return newNode;
     }
 
     /**
