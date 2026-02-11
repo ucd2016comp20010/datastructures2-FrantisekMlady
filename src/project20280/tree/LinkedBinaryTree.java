@@ -163,16 +163,7 @@ public class LinkedBinaryTree<E> extends AbstractBinaryTree<E> {
         return root;
     }
 
-    public void insert(E e) {
-        // TODO
 
-    }
-
-    // recursively add Nodes to binary tree in proper position
-    private Node<E> addRecursive(Node<E> p, E e) {
-        // TODO
-        return null;
-    }
 
     /**
      * Creates a new left child of Position p storing element e and returns its
@@ -213,8 +204,21 @@ public class LinkedBinaryTree<E> extends AbstractBinaryTree<E> {
      * @throws IllegalArgumentException if p already has a right child
      */
     public Position<E> addRight(Position<E> p, E e) throws IllegalArgumentException {
-        // TODO
-        return null;
+        if(p == null){
+            throw new IllegalArgumentException("Position cant be null");
+        }
+        if (!(p instanceof Node)) {
+            throw new IllegalArgumentException("Invalid position type");
+        }
+        Node<E> parent = (Node<E>)p;
+
+        if (parent.right != null) {
+            throw new IllegalArgumentException("Left child already exists");
+        }
+        Node<E> newNode = new Node<>(e, parent, null, null);
+        parent.right = newNode;
+        size++;
+        return newNode;
     }
 
     /**
@@ -227,8 +231,17 @@ public class LinkedBinaryTree<E> extends AbstractBinaryTree<E> {
      * @throws IllegalArgumentException if p is not a valid Position for this tree.
      */
     public E set(Position<E> p, E e) throws IllegalArgumentException {
-        // TODO
-        return null;
+        if(p == null){
+            return addRoot(e).getElement();
+        }
+        if (!(p instanceof Node)) {
+            throw new IllegalArgumentException("Invalid position type");
+        }
+        Node<E> pos = (Node<E>)p;
+        Node<E> posParent = (Node)parent(p);
+        Node<E> newNode = new Node<>(e,posParent, pos.left, pos.right);
+        pos = newNode;
+        return pos.getElement();
     }
 
     /**
