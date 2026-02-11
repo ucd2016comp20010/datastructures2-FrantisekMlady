@@ -2,6 +2,7 @@ package project20280.tree;
 
 import project20280.interfaces.Position;
 import project20280.interfaces.Tree;
+import project20280.stacksqueues.ArrayQueue;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,8 +28,7 @@ public abstract class AbstractTree<E> implements Tree<E> {
      */
     @Override
     public boolean isInternal(Position<E> p) {
-        // TODO
-        return false;
+        return children(p).iterator().hasNext();
     }
 
     /**
@@ -40,8 +40,7 @@ public abstract class AbstractTree<E> implements Tree<E> {
      */
     @Override
     public boolean isExternal(Position<E> p) {
-        // TODO
-        return false;
+        return !children(p).iterator().hasNext();
     }
 
     /**
@@ -52,8 +51,7 @@ public abstract class AbstractTree<E> implements Tree<E> {
      */
     @Override
     public boolean isRoot(Position<E> p) {
-        // TODO
-        return false;
+        return p == root();
     }
 
     /**
@@ -65,8 +63,10 @@ public abstract class AbstractTree<E> implements Tree<E> {
      */
     @Override
     public int numChildren(Position<E> p) {
-        // TODO
-        return 0;
+        int num = 0;
+        Iterator<Position<E>> iterator = children(p).iterator();
+        while(iterator.hasNext()){iterator.next(); num++;}
+        return num;
     }
 
     /**
@@ -100,8 +100,12 @@ public abstract class AbstractTree<E> implements Tree<E> {
      * @throws IllegalArgumentException if p is not a valid Position for this tree.
      */
     public int depth(Position<E> p) throws IllegalArgumentException {
-        // TODO
-        return 0;
+        if(isRoot(p)){
+            return 0;
+        }
+        else{
+            return 1 + depth(parent(p));
+        }
     }
 
     /**
@@ -118,8 +122,11 @@ public abstract class AbstractTree<E> implements Tree<E> {
     }
 
     public int height_recursive(Position<E> p) {
-        // TODO
-        return 0;
+        int h = 0;
+        for (Position<E> child : children(p)) {
+            h = Math.max(h, 1 + height_recursive(child));
+        }
+        return h;
     }
 
     /**
@@ -180,7 +187,10 @@ public abstract class AbstractTree<E> implements Tree<E> {
      * @param snapshot a list to which results are appended
      */
     private void preorderSubtree(Position<E> p, List<Position<E>> snapshot) {
-        // TODO
+        snapshot.add(p);
+        for (Position<E> child : children(p)) {
+            preorderSubtree(child, snapshot);
+        }
     }
 
     /**
@@ -189,8 +199,11 @@ public abstract class AbstractTree<E> implements Tree<E> {
      * @return iterable collection of the tree's positions in preorder
      */
     public Iterable<Position<E>> preorder() {
-        // TODO
-        return null;
+        List<Position<E>> snapshot = new ArrayList<>();
+        if (!isEmpty()) {
+            preorderSubtree(root(), snapshot);
+        }
+        return snapshot;
     }
 
     /**
@@ -201,7 +214,10 @@ public abstract class AbstractTree<E> implements Tree<E> {
      * @param snapshot a list to which results are appended
      */
     private void postorderSubtree(Position<E> p, List<Position<E>> snapshot) {
-        // TODO
+        for (Position<E> child : children(p)) {
+            postorderSubtree(child, snapshot);
+        }
+        snapshot.add(p);
     }
 
     /**
@@ -222,7 +238,19 @@ public abstract class AbstractTree<E> implements Tree<E> {
      * @return iterable collection of the tree's positions in breadth-first order
      */
     public Iterable<Position<E>> breadthfirst() {
-        // TODO
-        return null;
+        List<Position<E>> snapshot = new ArrayList<>();
+        if (!isEmpty()) {
+            ArrayQueue<Position<E>> queue = new ArrayQueue<>();
+            queue.enqueue(root());
+            while (!queue.isEmpty()) {
+                Position<E> p = queue.dequeue();
+                snapshot.add(p);
+
+                for (Position<E> child : children(p)) {
+                    queue.enqueue(child);
+                }
+            }
+        }
+        return snapshot;
     }
 }
