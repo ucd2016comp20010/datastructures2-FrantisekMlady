@@ -33,6 +33,16 @@ class SinglyLinkedListTest {
     }
 
     @Test
+    void testAddFirst() {
+        List<Integer> ll = new SinglyLinkedList<Integer>();
+        ll.addLast(-1);
+        ll.addFirst(1);
+
+        assertEquals(2, ll.size());
+        assertEquals("[1, -1]", ll.toString());
+    }
+
+    @Test
     void testAdd() {
         List<Integer> ll = new SinglyLinkedList<Integer>();
         ll.addLast(1);
@@ -54,6 +64,7 @@ class SinglyLinkedListTest {
         assertEquals(3, ll.remove(2), "the removed value should be 3");
         assertEquals(2, ll.size(), "the size should be 2");
     }
+
 
     @Test
     void testSize() {
@@ -90,15 +101,6 @@ class SinglyLinkedListTest {
         assertEquals(2, ll.size());
     }
 
-    @Test
-    void testAddFirst() {
-        List<Integer> ll = new SinglyLinkedList<Integer>();
-        ll.addLast(-1);
-        ll.addFirst(1);
-
-        assertEquals(2, ll.size());
-        assertEquals("[1, -1]", ll.toString());
-    }
 
     @Test
     void testAddLast() {

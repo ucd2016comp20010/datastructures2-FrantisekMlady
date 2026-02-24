@@ -3,9 +3,7 @@ package project20280.tree;
 import project20280.interfaces.Position;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import java.util.LinkedList;
 
 /**
  * Concrete implementation of a binary tree using a node-based, linked
@@ -324,6 +322,74 @@ public class LinkedBinaryTree<E> extends AbstractBinaryTree<E> {
         return btp.print();
     }
 
+    public void construct(E[] inorder, E[] preorder){
+        root = constructHelper(inorder, preorder, 0, inorder.length-1, 0, preorder.length-1, null);
+    }
+
+    private Node<E> constructHelper(E[] inorder, E[] preorder, int inStart, int inEnd, int preStart, int preEnd, Node<E> parent) {
+
+        if (inEnd < inStart || preEnd < preStart) {return null;}
+
+        E rootValue = preorder[preStart];
+        Node<E> rootNode = new Node(rootValue, parent, null, null);
+
+        int rootIndex = inStart;
+        while (!inorder[rootIndex].equals(rootValue)) {
+            rootIndex++;
+        }
+
+        int leftSize = rootIndex - inStart;
+        rootNode.left = constructHelper(inorder, preorder, inStart, rootIndex - 1,preStart + 1, preStart + leftSize, rootNode);
+        rootNode.right = constructHelper(inorder, preorder,rootIndex + 1, inEnd,preStart + leftSize + 1, preEnd, rootNode);
+
+        return rootNode;
+    }
+
+    public LinkedList<LinkedList<E>> rootToLeafPaths(){
+        LinkedList<E> current = new LinkedList<>();
+        LinkedList<LinkedList<E>> paths = new LinkedList<>();
+        rootToLeafPathsHelper(root, current, paths);
+        return paths;
+    }
+
+    private void rootToLeafPathsHelper(Node<E> node, LinkedList<E> current, LinkedList<LinkedList<E>> all){
+        if(node == null){
+            return;
+        }
+
+        current.add(node.getElement());
+
+        if(node.getLeft() == null && node.getRight() == null){
+            all.add(new LinkedList<>(current)); // make copy so they dont all end up empty
+        }
+        else{
+            // left first
+            rootToLeafPathsHelper(node.left, current, all);
+            // then right
+            rootToLeafPathsHelper(node.right, current, all);
+        }
+
+        current.removeLast();
+
+    }
+
+    public int diameter() {
+        int[] diameter = new int[1]; // avoids pass by value problems
+        diameterHelper(root, diameter);
+        return diameter[0];
+    }
+
+    private int diameterHelper(Node<E> node, int[] diameter) {
+        if (node == null) {return 0;}
+
+        int leftHeight = diameterHelper(node.left, diameter);
+        int rightHeight = diameterHelper(node.right, diameter);
+
+        diameter[0] = Math.max(diameter[0], leftHeight + rightHeight + 1);
+
+        return 1 + Math.max(leftHeight, rightHeight);
+    }
+
     /**
      * Nested static class for a binary tree node.
      */
@@ -381,5 +447,8 @@ public class LinkedBinaryTree<E> extends AbstractBinaryTree<E> {
             }
             return sb.toString();
         }
+
+
+
     }
 }
