@@ -390,6 +390,25 @@ public class LinkedBinaryTree<E> extends AbstractBinaryTree<E> {
         return 1 + Math.max(leftHeight, rightHeight);
     }
 
+    public LinkedList<E> printLeaves() {
+        LinkedList<E> list = new LinkedList<>();
+        printLeavesHelper(root, list);
+        return list;
+    }
+
+    private void printLeavesHelper(Node<E> node, LinkedList<E> list) {
+        if (node == null) {return;}
+
+        if (node.left == null && node.right == null) {
+            list.addLast(node.getElement());
+            return;
+        }
+
+        printLeavesHelper(node.left, list);
+        printLeavesHelper(node.right, list);
+    }
+
+
     /**
      * Nested static class for a binary tree node.
      */
