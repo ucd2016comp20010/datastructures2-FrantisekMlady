@@ -156,7 +156,6 @@ public class LinkedBinaryTree<E> extends AbstractBinaryTree<E> {
         if (!isEmpty()) {
             throw new IllegalStateException("Tree already has a root");
         }
-
         Node<E> newNode = new Node<>(e, null, null, null);
         size++;
         root = newNode;
@@ -175,9 +174,8 @@ public class LinkedBinaryTree<E> extends AbstractBinaryTree<E> {
      * @throws IllegalArgumentException if p is not a valid Position for this tree
      * @throws IllegalArgumentException if p already has a left child
      */
-    public Position<E> addLeft(Position<E> p, E e) throws IllegalArgumentException {
+    public Position<E> addLeft(Position<E> p, E e) {
         Node<E> parent = validate(p);
-
         if (parent.left != null) {
             throw new IllegalArgumentException("Left child already exists");
         }
@@ -199,7 +197,6 @@ public class LinkedBinaryTree<E> extends AbstractBinaryTree<E> {
      */
     public Position<E> addRight(Position<E> p, E e) throws IllegalArgumentException {
         Node<E> parent = validate(p);
-
         if (parent.right != null) {
             throw new IllegalArgumentException("Right child already exists");
         }
@@ -219,11 +216,10 @@ public class LinkedBinaryTree<E> extends AbstractBinaryTree<E> {
      * @throws IllegalArgumentException if p is not a valid Position for this tree.
      */
     public E set(Position<E> p, E e) throws IllegalArgumentException {
-        Node<E> pos = validate(p);
-        Node<E> posParent = pos.parent;
-        Node<E> newNode = new Node<>(e,posParent, pos.left, pos.right);
-        pos = newNode;
-        return pos.getElement();
+        Node<E> node = validate(p);
+        E old = node.element;
+        node.element = e;
+        return old;
     }
 
     /**
@@ -255,30 +251,34 @@ public class LinkedBinaryTree<E> extends AbstractBinaryTree<E> {
      * @throws IllegalArgumentException if p is not a valid Position for this tree.
      * @throws IllegalArgumentException if p has two children.
      */
+
     public E remove(Position<E> p) throws IllegalArgumentException {
-        if(isEmpty()){return null;}
-        Node<E> pos = validate(p);
-        if(pos.right != null && pos.left != null){
-            throw new IllegalArgumentException("Node has two children");
-        }
-        Node<E> child = (pos.left != null ? pos.left : pos.right);
+        if (isEmpty()){ return null;}
 
-        if (pos == root) {
+        Node<E> node = validate(p);
+        Node<E> child = (node.left != null ? node.left : node.right);
+        if (node == root) {
             root = child;
-            if (child != null) {child.parent = null;}
-        }
-        else {
-            Node<E> posParent = pos.parent;
-            if (posParent.left == pos) {
-                posParent.left = child;
-            } else if (posParent.right == pos) {
-                posParent.right = child;
+            if (child != null) {
+                child.parent = null;
             }
-            if (child != null) {child.parent = posParent;}
+        } else {
+            Node<E> parent = node.parent;
+            if (parent.left == node) {
+                parent.left = child;
+            }
+            else {
+                parent.right = child;
+            }
+            if (child != null) {
+                child.parent = parent;
+            }
         }
+        node.left = null;
+        node.right = null;
+        node.parent = null;
         size--;
-        return pos.getElement();
-
+        return node.getElement();
     }
 
     public String toString() {
